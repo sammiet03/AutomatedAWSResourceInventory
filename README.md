@@ -82,13 +82,25 @@ The SNS topic sends a daily email report summarizing the AWS resource inventory.
 ---
 
 ## 🧹 **Cleanup**
-
-To delete all resources created:
-```bash
-terraform destroy -auto-approve
+There are 2 options: 
+1. To disable the Daily Trigger Only (keep your Lambda code for future use)
+```
+aws events disable-rule --name DailyInventoryTrigger
 ```
 
----
+2. To delete all resources created:
+```bash
+terraform destroy -auto-approve
+cd terraform
+terraform destroy -var-file="../config/terraform.tfvars"
+```
+
+
+## To Re-deploy everything 
+```
+terraform apply -var-file="../config/terraform.tfvars" -auto-approve
+aws events enable-rule --name DailyInventoryTrigger
+``` 
 
 
 Happy Automating! 🎉
