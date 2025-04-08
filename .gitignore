@@ -27,3 +27,6 @@ __pycache__/
 # Secrets and keys
 *.key
 *.pem
+
+*.env
+*.tfvars
