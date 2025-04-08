@@ -78,7 +78,7 @@ resource "aws_lambda_function" "inventory_lambda" {
   timeout       = 60
   memory_size   = 512
 
-  s3_bucket = "aws-resource-inventory-lambda-project"
+  s3_bucket = var.s3_bucket_name
   s3_key    = "lambda_function.zip"
 
   environment {

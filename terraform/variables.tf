@@ -22,3 +22,8 @@ variable "lambda_role_name" {
   description = "Name of the IAM role for Lambda"
   default     = "lambda_inventory_role"
 }
+
+variable "s3_bucket_name" {
+  description = "S3 bucket where Lambda zip is stored"
+  type        = string
+}
