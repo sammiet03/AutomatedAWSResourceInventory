@@ -55,7 +55,7 @@ AutomatedAWSResourceInventory/
 │   └── variables.tf                # Input variables used throughout the Terraform files
 │
 ├── config/                         # Environment-specific configs
-│   ├── terraform.tfvars            # Actual values for the Terraform input variables (region, function name, etc.)
+│   ├── terraform.tfvars.example    # Actual values for the Terraform input variables (region, function name, etc.)
 │   └── aws.env                     # (Optional) local environment variables or AWS credentials file
 │
 ├── architecture-diagram.png        # Visual overview of how the architecture works (text/diagram)
