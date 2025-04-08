@@ -23,7 +23,8 @@ A serverless infrastructure-as-code solution to automatically scan and inventory
 - **SNS** sends a daily summary notification
 - **Terraform** provisions the entire stack
 
-![Architecture Diagram](architecture-diagram.md)
+![AWS Resource Inventory Architecture](architecture-diagram.png)
+
 
 ---
 
@@ -57,7 +58,7 @@ AutomatedAWSResourceInventory/
 │   ├── terraform.tfvars            # Actual values for the Terraform input variables (region, function name, etc.)
 │   └── aws.env                     # (Optional) local environment variables or AWS credentials file
 │
-├── architecture-diagram.md        # Visual overview of how the architecture works (text/diagram)
+├── architecture-diagram.png        # Visual overview of how the architecture works (text/diagram)
 ├── .gitignore                     # Files/folders to ignore in Git (e.g., .zip files, .terraform/)
 └── README.md                      # Project documentation with usage, setup instructions, and description
 ```
