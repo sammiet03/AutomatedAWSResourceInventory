@@ -4,7 +4,7 @@ A serverless infrastructure-as-code solution to automatically scan and inventory
 
 ---
 
-## 📦 Features
+### 📦 Features
 
 - 🔁 **Daily automated scans** of AWS resources
 - 🧠 Inventories EC2, S3, IAM, Route 53, CloudFront, ACM, Lambda, API Gateway
@@ -15,7 +15,7 @@ A serverless infrastructure-as-code solution to automatically scan and inventory
 
 ---
 
-## 🧱 Architecture
+### 🧱 Architecture
 
 - **Lambda Function** (Python) runs daily to scan AWS services
 - **CloudWatch Events (EventBridge)** triggers the Lambda function on a schedule
@@ -28,7 +28,7 @@ A serverless infrastructure-as-code solution to automatically scan and inventory
 
 ---
 
-## 🚀 Technologies Used
+### 🚀 Technologies Used
 
 | Tool       | Purpose                               |
 |------------|----------------------------------------|
@@ -41,7 +41,7 @@ A serverless infrastructure-as-code solution to automatically scan and inventory
 
 ---
 
-## 📁 Project Structure
+### 📁 Project Structure
 
 ```
 AutomatedAWSResourceInventory/
@@ -63,7 +63,7 @@ AutomatedAWSResourceInventory/
 └── README.md                      # Project documentation with usage, setup instructions, and description
 ```
 
-## 📧 **Email Notifications**
+### 📧 **Email Notifications**
 
 The SNS topic sends a daily email report summarizing the AWS resource inventory. Make sure to subscribe your email to the SNS topic manually:
 1. Go to AWS SNS Console.
@@ -73,7 +73,7 @@ The SNS topic sends a daily email report summarizing the AWS resource inventory.
 
 ---
 
-## 🌟 **Monitoring**
+### 🌟 **Monitoring**
 
 - **CloudWatch Logs:** Check logs for Lambda execution errors.
 - **DynamoDB Table:** Verify data insertion.
@@ -81,7 +81,7 @@ The SNS topic sends a daily email report summarizing the AWS resource inventory.
 
 ---
 
-## 🧹 **Cleanup**
+### 🧹 **Cleanup**
 There are 2 options: 
 1. To disable the Daily Trigger Only (keep your Lambda code for future use)
 ```
@@ -96,7 +96,7 @@ terraform destroy -var-file="../config/terraform.tfvars"
 ```
 
 
-## ✅ Things to Check in AWS Console (Post-Project)
+### ✅ Things to Check in AWS Console (Post-Project)
 ### **1. CloudWatch Events / EventBridge (Scheduled Lambda)**
 
 Go to:  **Amazon EventBridge → Rules**
@@ -140,7 +140,7 @@ Go to:
 
 
 
-## To Re-deploy everything 
+### To Re-deploy everything 
 ```
 terraform apply -var-file="../config/terraform.tfvars" -auto-approve
 aws events enable-rule --name DailyInventoryTrigger
