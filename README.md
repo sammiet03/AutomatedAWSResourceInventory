@@ -97,12 +97,10 @@ terraform destroy -var-file="../config/terraform.tfvars"
 
 
 ## ✅ Things to Check in AWS Console (Post-Project)
-### 🔁 **1. CloudWatch Events / EventBridge (Scheduled Lambda)**
+### **1. CloudWatch Events / EventBridge (Scheduled Lambda)**
 
-📍 Go to:  
-**Amazon EventBridge → Rules**
-
-- ✅ Look for: `DailyInventoryTrigger`
+Go to:  **Amazon EventBridge → Rules**
+- Look for: `DailyInventoryTrigger`
 - Check if it says: `Status: Disabled`
 - If it still says `Enabled`, click it → choose **"Disable"**
 
@@ -110,25 +108,22 @@ terraform destroy -var-file="../config/terraform.tfvars"
 
 ### 🛠 **2. AWS Lambda**
 
-📍 Go to:  
-**AWS Lambda → Functions**
-
+Go to: **AWS Lambda → Functions**
 - Look for: `ResourceInventoryLambda`
-- ✅ It’s fine if it's still there — Lambda does **not** run unless invoked
+- It’s fine if it's still there — Lambda does **not** run unless invoked
 - Just make sure it’s **not being auto-triggered** > Configurations > Trigger > Should show Rule state: DISABLED
 
 ---
 
 ### 📬 **3. SNS (Notifications)**
-📍 Go to:  
-**Amazon SNS → Topics → InventoryReports**
+Go to:  **Amazon SNS → Topics → InventoryReports**
 - SNS costs are near zero unless it's actively sending emails/SMS/etc.
 - You can optionally **unsubscribe** or remove test subscriptions
 
 ---
 
 ### 📦 **4. DynamoDB**
-📍 Go to:  
+Go to:  
 **DynamoDB → Tables → ResourceInventory**
 - DynamoDB PAY_PER_REQUEST tables are cost-efficient if left alone
 - You won’t incur significant charges unless it’s actively used
@@ -136,12 +131,10 @@ terraform destroy -var-file="../config/terraform.tfvars"
 ---
 
 ### 📊 **5. CloudWatch Logs**
-📍 Go to:  
-**CloudWatch → Log Groups → `/aws/lambda/ResourceInventoryLambda`**
-
+ Go to:  **CloudWatch → Log Groups → `/aws/lambda/ResourceInventoryLambda`**
 - These stay until they expire (you set `retention_in_days = 3`)
 - Nothing runs unless invoked
-- ✅ Logs will slowly age out
+- Logs will slowly age out
 
 ---
 
