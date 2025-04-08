@@ -63,6 +63,40 @@ AutomatedAWSResourceInventory/
 └── README.md                      # Project documentation with usage, setup instructions, and description
 ```
 
+
+Absolutely! Here's the **Getting Started** section from your README:
+
+---
+
+### 🛠️ Getting Started
+
+1. **Clone the repo**  
+2. **Create your own `terraform.tfvars` from the example:**
+
+```
+cp config/terraform.tfvars.example config/terraform.tfvars
+```
+
+3. **Fill in your AWS-specific values** (bucket name, region, etc.)
+4. **Upload the Lambda package to S3:**
+
+```
+cd lambda
+zip lambda_function.zip lambda_function.py
+aws s3 cp lambda_function.zip s3://your-s3-bucket-name/
+```
+
+5. **Deploy infrastructure with Terraform:**
+
+```
+cd terraform
+terraform init
+terraform apply -var-file="../config/terraform.tfvars" -auto-approve
+```
+
+---
+
+
 ### 📧 **Email Notifications**
 
 The SNS topic sends a daily email report summarizing the AWS resource inventory. Make sure to subscribe your email to the SNS topic manually:
