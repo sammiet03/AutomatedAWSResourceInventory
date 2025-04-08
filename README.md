@@ -1,133 +1,66 @@
-Here is a **README.md** file for your **Automated AWS Resource Inventory** project. It is well-organized and contains instructions, usage, and architecture details.
+# 🛰️ Automated AWS Resource Inventory
+
+A serverless infrastructure-as-code solution to automatically scan and inventory AWS resources across multiple services — including EC2, S3, IAM, Route 53, CloudFront, ACM, Lambda, and API Gateway — and store the results in DynamoDB with daily reporting via SNS.
 
 ---
 
-### **README.md**
+## 📦 Features
 
-```markdown
-# 🚀 Automated AWS Resource Inventory
-
-An automated serverless solution that scans and inventories AWS resources (EC2, S3, IAM) daily, stores the data in DynamoDB, and sends notifications via SNS. The entire infrastructure is managed using Terraform, ensuring consistent and reproducible deployments.
-
----
-
-## 🗺️ **Project Architecture**
-
-1. **AWS Lambda** - Python function that scans AWS resources (EC2, S3, IAM) using Boto3.
-2. **DynamoDB** - Stores resource inventory data.
-3. **SNS** - Sends daily reports of AWS resources.
-4. **CloudWatch Events** - Triggers the Lambda function every 24 hours.
-5. **Terraform** - Automates the setup of infrastructure.
+- 🔁 **Daily automated scans** of AWS resources
+- 🧠 Inventories EC2, S3, IAM, Route 53, CloudFront, ACM, Lambda, API Gateway
+- 📥 Stores results in a DynamoDB table
+- 📬 Sends daily summary notifications via SNS
+- 🛠️ Fully deployed using Terraform for consistent, repeatable infrastructure
+- ☁️ Uses AWS Lambda + Boto3 (Python) for scalable, serverless operation
 
 ---
 
-## 📝 **Features**
+## 🧱 Architecture
 
-- Daily scan of AWS resources (EC2, S3, IAM).
-- Stores results in a DynamoDB table for persistence.
-- Sends daily reports via SNS.
-- Fully automated deployment using Terraform.
-- Cost-efficient and serverless design.
+- **Lambda Function** (Python) runs daily to scan AWS services
+- **CloudWatch Events (EventBridge)** triggers the Lambda function on a schedule
+- **DynamoDB** stores inventory data (resource ID, type, metadata, timestamp)
+- **SNS** sends a daily summary notification
+- **Terraform** provisions the entire stack
 
----
-
-## ⚙️ **Pre-requisites**
-
-- **AWS CLI** configured with necessary permissions.
-- **Terraform** installed on your system.
-- **AWS Account** with access to EC2, S3, IAM, DynamoDB, CloudWatch, and SNS.
+![Architecture Diagram](architecture-diagram.md)
 
 ---
 
-## 🏗️ **Infrastructure Setup**
+## 🚀 Technologies Used
 
-### **1. Clone the Repository**
-```bash
-git clone https://github.com/yourusername/aws-resource-inventory.git
-cd aws-resource-inventory
-```
-
-### **2. Terraform Initialization**
-```bash
-cd terraform
-terraform init
-```
-
-### **3. Deploy Infrastructure**
-```bash
-terraform apply -auto-approve
-```
-
-### **4. Package Lambda Function**
-```bash
-cd lambda
-zip lambda_function.zip lambda_function.py
-```
-
-### **5. Upload Lambda Package to S3**
-```bash
-aws s3 cp lambda_function.zip s3://your-lambda-bucket/
-```
+| Tool       | Purpose                               |
+|------------|----------------------------------------|
+| AWS Lambda | Serverless function for scanning       |
+| Boto3      | AWS SDK for Python                     |
+| DynamoDB   | NoSQL storage for inventory data       |
+| SNS        | Notifications for inventory reports    |
+| CloudWatch | Scheduling + logging                   |
+| Terraform  | Infrastructure as Code (IaC)           |
 
 ---
 
-## 🗃️ **DynamoDB Table Structure**
-
-| Field       | Type    | Description                 |
-|------------|---------|-----------------------------|
-| ResourceId | String  | Unique ID of the resource     |
-| Type       | String  | Type of AWS resource (EC2/S3/IAM) |
-| Details    | String  | JSON-encoded details of the resource |
-| Timestamp  | String  | Time of data collection       |
-
----
-
-## 📝 **Lambda Function Logic**
-
-- Uses **Boto3** to scan AWS services:
-  - EC2 Instances
-  - S3 Buckets
-  - IAM Users
-- Stores the collected data in DynamoDB.
-- Sends a summary report via SNS.
-
-### **Sample Output:**
-```
-{
-  "status": "success",
-  "scanned": 50
-}
-```
-
----
-
-## 🛠️ **Running the Lambda Function Manually**
-```bash
-aws lambda invoke --function-name ResourceInventoryLambda output.json
-```
-
-### **Check the Output:**
-```bash
-cat output.json
-```
-
----
-
-## 🗂️ **Project Structure**
+## 📁 Project Structure
 
 ```
-aws-resource-inventory/
-├── terraform/
-│   ├── main.tf
-│   ├── variables.tf
-│   ├── outputs.tf
-├── lambda/
-│   ├── lambda_function.py
-│   └── lambda_function.zip
-└── README.md
+AutomatedAWSResourceInventory/
+├── lambda/                         # Serverless function logic (Python)
+│   ├── lambda_function.py          # Lambda code that scans AWS services and pushes data to DynamoDB + SNS
+│   └── lambda_function.zip         # Zipped deployment package uploaded to S3 (built from the .py)
+│
+├── terraform/                      # Infrastructure-as-Code definitions
+│   ├── main.tf                     # Main Terraform config: Lambda, IAM, CloudWatch,DynamoDB, SNS
+│   ├── outputs.tf                  # Outputs like ARNs or resource names for reference
+│   └── variables.tf                # Input variables used throughout the Terraform files
+│
+├── config/                         # Environment-specific configs
+│   ├── terraform.tfvars            # Actual values for the Terraform input variables (region, function name, etc.)
+│   └── aws.env                     # (Optional) local environment variables or AWS credentials file
+│
+├── architecture-diagram.md        # Visual overview of how the architecture works (text/diagram)
+├── .gitignore                     # Files/folders to ignore in Git (e.g., .zip files, .terraform/)
+└── README.md                      # Project documentation with usage, setup instructions, and description
 ```
-
----
 
 ## 📧 **Email Notifications**
 
@@ -156,34 +89,5 @@ terraform destroy -auto-approve
 
 ---
 
-## 📝 **Contributing**
-
-1. Fork the repository.
-2. Create a new branch.
-3. Make your changes.
-4. Submit a pull request.
-
----
-
-## 🛡️ **License**
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-
-## 📧 **Contact**
-
-For any issues or suggestions, feel free to open an issue or contact the project maintainer at [your-email@example.com](mailto:your-email@example.com).
 
 Happy Automating! 🎉
-```
-
----
-
-### **How to Use the README**
-
-1. Replace placeholders like `yourusername`, `your-lambda-bucket`, and `your-email@example.com` with your actual information.
-2. Customize the **Contact** and **License** sections as needed.
-3. Upload the `README.md` to your GitHub repository root directory.
-
-Let me know if you need more customization or additional sections! 🚀
