@@ -1,0 +1,21 @@
+# Terraform files
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+
+# Lambda packages
+lambda/*.zip
+
+# AWS credentials and config
+config/*.env
+config/*.tfvars
+config/aws.env
+
+# Python compiled files
+__pycache__/
+*.pyc
+
+# IDE files
+.vscode/
+.idea/
