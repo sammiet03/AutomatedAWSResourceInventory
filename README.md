@@ -4,6 +4,8 @@ A serverless infrastructure-as-code solution to automatically scan and inventory
 
 ---
 
+### This project uses [git-secrets](https://github.com/awslabs/git-secrets) to prevent committing credentials or secrets. Run `git secrets --scan` to check your repo before pushing.
+
 ### 📦 Features
 
 - **Daily automated scans** of AWS resources
