@@ -81,19 +81,23 @@ resource "aws_iam_policy" "lambda_s3_create" {
   })
 }
 
+# Attach the custom S3 creation policy to the IAM role
 resource "aws_iam_role_policy_attachment" "lambda_s3_create_attachment" {
   role       = aws_iam_role.lambda_exec.name
   policy_arn = aws_iam_policy.lambda_s3_create.arn
 }
 
+# Lambda Function
 resource "aws_lambda_function" "inventory_lambda" {
   function_name = var.lambda_function_name
   role          = aws_iam_role.lambda_exec.arn
   handler       = "lambda_function.lambda_handler"
-  runtime       = "python3.9"  # Change from python3.11 to python3.9
+  runtime       = "python3.9"
+  timeout       = 30     # Set timeout to 30 seconds
+  memory_size   = 256    # Increase memory size to 256 MB
 
   # S3 location of the Lambda zip file
-  s3_bucket = "aws-resource-inventory-lambda-project"  # Replace with your bucket name
+  s3_bucket = "aws-resource-inventory-lambda-project"
   s3_key    = "lambda_function.zip"
 
   environment {
@@ -108,15 +112,52 @@ resource "aws_lambda_function" "inventory_lambda" {
   }
 }
 
+# Allow CloudWatch to invoke Lambda
+resource "aws_lambda_permission" "allow_cloudwatch" {
+  statement_id  = "AllowExecutionFromCloudWatch"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.inventory_lambda.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.daily_inventory.arn
+}
 
-
-# CloudWatch Event Rule
+# CloudWatch Event Rule for Daily Scans
 resource "aws_cloudwatch_event_rule" "daily_inventory" {
   name                = "DailyInventoryTrigger"
   schedule_expression = "rate(1 day)"
 }
 
+# CloudWatch Event Target to trigger Lambda
 resource "aws_cloudwatch_event_target" "lambda_target" {
-  rule = aws_cloudwatch_event_rule.daily_inventory.name
-  arn  = aws_lambda_function.inventory_lambda.arn
+  rule      = aws_cloudwatch_event_rule.daily_inventory.name
+  target_id = "LambdaTarget"
+  arn       = aws_lambda_function.inventory_lambda.arn
+}
+
+
+# Custom Inline Policy for EC2 Describe Instances
+resource "aws_iam_policy" "lambda_ec2_describe" {
+  name        = "LambdaEC2DescribePolicy"
+  description = "Policy to allow Lambda to describe EC2 instances"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = [
+          "ec2:DescribeInstances",
+          "ec2:DescribeRegions",
+          "ec2:DescribeTags"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+# Attach the custom EC2 describe policy to the IAM role
+resource "aws_iam_role_policy_attachment" "lambda_ec2_describe_attachment" {
+  role       = aws_iam_role.lambda_exec.name
+  policy_arn = aws_iam_policy.lambda_ec2_describe.arn
 }
