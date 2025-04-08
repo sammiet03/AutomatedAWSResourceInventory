@@ -6,12 +6,12 @@ A serverless infrastructure-as-code solution to automatically scan and inventory
 
 ### 📦 Features
 
-- 🔁 **Daily automated scans** of AWS resources
-- 🧠 Inventories EC2, S3, IAM, Route 53, CloudFront, ACM, Lambda, API Gateway
-- 📥 Stores results in a DynamoDB table
-- 📬 Sends daily summary notifications via SNS
-- 🛠️ Fully deployed using Terraform for consistent, repeatable infrastructure
-- ☁️ Uses AWS Lambda + Boto3 (Python) for scalable, serverless operation
+- **Daily automated scans** of AWS resources
+- Inventories EC2, S3, IAM, Route 53, CloudFront, ACM, Lambda, API Gateway
+- Stores results in a DynamoDB table
+- Sends daily summary notifications via SNS
+- Fully deployed using Terraform for consistent, repeatable infrastructure
+- Uses AWS Lambda + Boto3 (Python) for scalable, serverless operation
 
 ---
 
