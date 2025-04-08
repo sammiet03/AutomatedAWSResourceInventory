@@ -63,9 +63,6 @@ AutomatedAWSResourceInventory/
 └── README.md                      # Project documentation with usage, setup instructions, and description
 ```
 
-
-Absolutely! Here's the **Getting Started** section from your README:
-
 ---
 
 ### 🛠️ Getting Started
