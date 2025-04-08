@@ -14,11 +14,11 @@ variable "sns_topic_name" {
 }
 
 variable "lambda_function_name" {
-  description = "Lambda function name"
+  description = "Name of the Lambda function"
   default     = "ResourceInventoryLambda"
 }
 
 variable "lambda_role_name" {
-  description = "IAM role for Lambda execution"
-  default     = "LambdaResourceInventoryRole"
+  description = "Name of the IAM role for Lambda"
+  default     = "lambda_inventory_role"
 }

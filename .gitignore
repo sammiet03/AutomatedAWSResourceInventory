@@ -19,3 +19,10 @@ __pycache__/
 # IDE files
 .vscode/
 .idea/
+
+# VSCode settings
+.vscode/
+
+# Secrets and keys
+*.key
+*.pem

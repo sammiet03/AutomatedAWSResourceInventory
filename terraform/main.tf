@@ -11,7 +11,7 @@ provider "aws" {
   region = var.aws_region
 }
 
-# DynamoDB Table
+# DynamoDB Table for storing AWS resource inventory
 resource "aws_dynamodb_table" "resource_inventory" {
   name         = var.dynamodb_table
   billing_mode = "PAY_PER_REQUEST"
@@ -21,9 +21,14 @@ resource "aws_dynamodb_table" "resource_inventory" {
     name = "ResourceId"
     type = "S"
   }
+
+  tags = {
+    Name        = "AWS Resource Inventory"
+    Environment = "Production"
+  }
 }
 
-# SNS Topic
+# SNS Topic for sending inventory reports
 resource "aws_sns_topic" "inventory_reports" {
   name = var.sns_topic_name
 }
@@ -43,48 +48,25 @@ resource "aws_iam_role" "lambda_exec" {
   })
 }
 
-# Attach AWS Lambda basic execution role for CloudWatch logging
-resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
+# IAM Role Attachments
+resource "aws_iam_role_policy_attachment" "lambda_admin_access" {
+  role       = aws_iam_role.lambda_exec.name
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_sns_publish" {
+  role       = aws_iam_role.lambda_exec.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSNSFullAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_logging" {
   role       = aws_iam_role.lambda_exec.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-# Attach S3 Read-Only Access Policy
-resource "aws_iam_role_policy_attachment" "lambda_s3_read_access" {
+resource "aws_iam_role_policy_attachment" "lambda_s3_full_access" {
   role       = aws_iam_role.lambda_exec.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
-}
-
-# Custom Inline Policy for S3 Bucket Creation
-resource "aws_iam_policy" "lambda_s3_create" {
-  name        = "LambdaS3CreatePolicy"
-  description = "Policy to allow Lambda to create and read S3 buckets"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect   = "Allow"
-        Action   = [
-          "s3:CreateBucket",
-          "s3:PutObject",
-          "s3:GetObject",
-          "s3:ListBucket",
-          "s3:DeleteBucket"
-        ]
-        Resource = [
-          "arn:aws:s3:::aws-resource-inventory-lambda-project",
-          "arn:aws:s3:::aws-resource-inventory-lambda-project/*"
-        ]
-      }
-    ]
-  })
-}
-
-# Attach the custom S3 creation policy to the IAM role
-resource "aws_iam_role_policy_attachment" "lambda_s3_create_attachment" {
-  role       = aws_iam_role.lambda_exec.name
-  policy_arn = aws_iam_policy.lambda_s3_create.arn
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
 
 # Lambda Function
@@ -93,10 +75,9 @@ resource "aws_lambda_function" "inventory_lambda" {
   role          = aws_iam_role.lambda_exec.arn
   handler       = "lambda_function.lambda_handler"
   runtime       = "python3.9"
-  timeout       = 30     # Set timeout to 30 seconds
-  memory_size   = 256    # Increase memory size to 256 MB
+  timeout       = 60
+  memory_size   = 512
 
-  # S3 location of the Lambda zip file
   s3_bucket = "aws-resource-inventory-lambda-project"
   s3_key    = "lambda_function.zip"
 
@@ -108,11 +89,12 @@ resource "aws_lambda_function" "inventory_lambda" {
   }
 
   tags = {
-    Name = "AWS Resource Inventory Lambda"
+    Name        = "AWS Resource Inventory Lambda"
+    Environment = "Production"
   }
 }
 
-# Allow CloudWatch to invoke Lambda
+# CloudWatch Permissions and Events
 resource "aws_lambda_permission" "allow_cloudwatch" {
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
@@ -121,43 +103,23 @@ resource "aws_lambda_permission" "allow_cloudwatch" {
   source_arn    = aws_cloudwatch_event_rule.daily_inventory.arn
 }
 
-# CloudWatch Event Rule for Daily Scans
 resource "aws_cloudwatch_event_rule" "daily_inventory" {
   name                = "DailyInventoryTrigger"
   schedule_expression = "rate(1 day)"
 }
 
-# CloudWatch Event Target to trigger Lambda
 resource "aws_cloudwatch_event_target" "lambda_target" {
   rule      = aws_cloudwatch_event_rule.daily_inventory.name
   target_id = "LambdaTarget"
   arn       = aws_lambda_function.inventory_lambda.arn
 }
 
+# Explicitly create the log group for Lambda
+resource "aws_cloudwatch_log_group" "lambda_log_group" {
+  name              = "/aws/lambda/${var.lambda_function_name}"
+  retention_in_days = 3
 
-# Custom Inline Policy for EC2 Describe Instances
-resource "aws_iam_policy" "lambda_ec2_describe" {
-  name        = "LambdaEC2DescribePolicy"
-  description = "Policy to allow Lambda to describe EC2 instances"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect   = "Allow"
-        Action   = [
-          "ec2:DescribeInstances",
-          "ec2:DescribeRegions",
-          "ec2:DescribeTags"
-        ]
-        Resource = "*"
-      }
-    ]
-  })
-}
-
-# Attach the custom EC2 describe policy to the IAM role
-resource "aws_iam_role_policy_attachment" "lambda_ec2_describe_attachment" {
-  role       = aws_iam_role.lambda_exec.name
-  policy_arn = aws_iam_policy.lambda_ec2_describe.arn
+  tags = {
+    Environment = "Production"
+  }
 }
