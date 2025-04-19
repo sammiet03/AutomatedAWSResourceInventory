@@ -1,4 +1,4 @@
-# 🛰️ Automated AWS Resource Inventory
+## 🛰️ Automated AWS Resource Inventory
 
 A serverless infrastructure-as-code solution to automatically scan and inventory AWS resources across multiple services — including EC2, S3, IAM, Route 53, CloudFront, ACM, Lambda, and API Gateway — and store the results in DynamoDB with daily reporting via SNS.
 
