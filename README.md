@@ -31,8 +31,9 @@ If it returns nothing, you’re clean
 - **Terraform** provisions the entire stack
 
 <p align="center">
-  <img src="(https://github.com/sammiet03/AutomatedAWSResourceInventory/blob/main/architecture-diagram.png)" alt="Architecture Diagram" width="600"/>
+  <img src="https://github.com/sammiet03/AutomatedAWSResourceInventory/raw/main/architecture-diagram.png" alt="Architecture Diagram" width="600"/>
 </p>
+
 
 
 ---
