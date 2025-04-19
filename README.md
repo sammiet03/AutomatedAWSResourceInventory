@@ -30,7 +30,9 @@ If it returns nothing, you’re clean
 - **SNS** sends a daily summary notification
 - **Terraform** provisions the entire stack
 
-![AWS Resource Inventory Architecture](architecture-diagram.png)
+<p align="center">
+  <img src="(https://github.com/sammiet03/AutomatedAWSResourceInventory/blob/main/architecture-diagram.png)" alt="Architecture Diagram" width="600"/>
+</p>
 
 
 ---
