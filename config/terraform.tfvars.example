@@ -1,0 +1,6 @@
+aws_region           = "us-east-1"
+dynamodb_table       = "ResourceInventory"
+sns_topic_name       = "InventoryReports"
+lambda_function_name = "ResourceInventoryLambda"
+lambda_role_name     = "lambda_inventory_role"
+s3_bucket_name       = "your-s3-bucket-name"
